@@ -65,5 +65,16 @@ document.getElementById("form").addEventListener("submit", (e) => {
     d.city && `الموقع: ${d.city}`,
     d.details && `التفاصيل: ${d.details}`,
   ].filter(Boolean);
-  window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank");
+  const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(lines.join("\n"))}`;
+  const w = window.open(url, "_blank");
+  if (!w) {
+    // popup blocked: fall back to a real link click
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
 });
