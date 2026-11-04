@@ -38,55 +38,68 @@
     </div>
   </header>
 
-  <!-- ===== Hero ===== -->
-  <section class="hero">
-    <div class="hero-bg" aria-hidden="true">
-      <svg class="ecg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-        <path d="M0 60 H380 L410 60 L430 20 L455 105 L480 8 L505 85 L520 60 H760 L785 60 L800 35 L820 90 L840 60 H1200"/>
-      </svg>
+  <!-- ===== Loader ===== -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="aperture">
+      <i></i><i></i><i></i><i></i><i></i><i></i>
     </div>
-    <div class="container hero-grid">
-      <div class="hero-text reveal">
-        <span class="pill">🎬 متخصصون في المحتوى الطبي</span>
-        <h1>نحوّل خبرتك الطبية إلى <span class="grad">فيديو يثق به المريض</span></h1>
-        <p class="lead">
-          أنا <strong>مصطفى</strong>، مونتير متخصص بالفيديوهات الطبية. أقدّم مونتاجاً احترافياً
-          للأطباء والعيادات والمستشفيات، مع <strong>فريق تصوير يصل إلى مكانك</strong> بكامل المعدات.
-        </p>
-        <div class="hero-cta">
-          <a class="btn" href="https://wa.me/9647738223911?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%20%D9%85%D8%B5%D8%B7%D9%81%D9%89%D8%8C%20%D8%A3%D8%B1%D9%8A%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%D9%83%D9%85" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .3-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.2.2-.3.4-.1.7.2.3.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.7 1.6.3.1.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3.1.2.1.7-.2 1.4z"/></svg>
-            احجز عبر واتساب
-          </a>
-          <a class="btn btn-ghost" href="#services">استكشف الخدمات</a>
-        </div>
-        <ul class="hero-stats">
-          <li><b>4K</b><span>جودة تصوير</span></li>
-          <li><b>48h</b><span>تسليم سريع</span></li>
-          <li><b>100%</b><span>خصوصية المريض</span></li>
-        </ul>
+    <div class="loader-text">Pro<b>Studio</b></div>
+    <div class="loader-bar"><span id="loaderBar"></span></div>
+  </div>
+
+  <!-- ===== 3D Stage (scroll-driven) ===== -->
+  <section class="stage" id="stage">
+    <div class="stage-sticky">
+      <canvas id="scene3d" aria-label="استوديو ثلاثي الأبعاد: كاميرا سينمائية، إضاءة، وحاسبة مونتاج"></canvas>
+      <div class="vignette" aria-hidden="true"></div>
+
+      <!-- Viewfinder HUD -->
+      <div class="hud" aria-hidden="true">
+        <span class="hud-c tl"></span><span class="hud-c tr"></span><span class="hud-c bl"></span><span class="hud-c br"></span>
+        <div class="hud-top"><span class="hud-rec">● REC</span><span id="hudTc">00:00:00:00</span></div>
+        <div class="hud-bottom"><span>4K · 60FPS</span><span>ISO 800</span><span>f/1.8</span><span id="hudScene">SCENE 01</span></div>
       </div>
 
-      <div class="hero-visual reveal" aria-hidden="true">
-        <div class="editor">
-          <div class="editor-top"><i></i><i></i><i></i><span>Medical_Promo_Final.mp4</span></div>
-          <div class="editor-screen">
-            <div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            <div class="rec">● REC</div>
-            <div class="screen-cross">
-              <svg viewBox="0 0 24 24"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z"/></svg>
-            </div>
-          </div>
-          <div class="timeline">
-            <div class="track t1"><span style="width:30%"></span><span style="width:22%"></span><span style="width:38%"></span></div>
-            <div class="track t2"><span style="width:18%"></span><span style="width:45%"></span><span style="width:20%"></span></div>
-            <div class="track t3"><span style="width:90%"></span></div>
-            <div class="playhead"></div>
+      <div class="panels">
+        <div class="panel active" data-i="0">
+          <span class="pill">🎬 متخصصون في المحتوى الطبي</span>
+          <h1>نحوّل خبرتك الطبية إلى <span class="grad">فيديو يثق به المريض</span></h1>
+          <p class="lead">أنا <strong>مصطفى</strong> — مونتير فيديوهات طبية. مرّر للأسفل وتجوّل داخل الاستوديو.</p>
+          <div class="hero-cta">
+            <a class="btn" href="https://wa.me/9647738223911" target="_blank" rel="noopener">احجز عبر واتساب</a>
+            <a class="btn btn-ghost" href="#services">الخدمات</a>
           </div>
         </div>
-        <div class="float-card fc1">🩺 فريق التصوير في الطريق</div>
-        <div class="float-card fc2">✅ تم تسليم المونتاج</div>
+        <div class="panel" data-i="1">
+          <span class="kicker">01 — المعدات</span>
+          <h2>كاميرات سينمائية <span class="grad">4K</span></h2>
+          <p>عدسات احترافية، شاشة مراقبة، وصوت لاسلكي نقي… كل لقطة لعيادتك تُصوَّر بجودة الأفلام.</p>
+        </div>
+        <div class="panel" data-i="2">
+          <span class="kicker">02 — التصوير الميداني</span>
+          <h2>فريق تصوير <span class="grad">يوصل لمكانك</span></h2>
+          <p>نجي لعيادتك أو مستشفاك بالكاميرات والإضاءة والمايكات، ونرتّب الموقع ونصوّر بدون ما نعطّل شغلك.</p>
+        </div>
+        <div class="panel" data-i="3">
+          <span class="kicker">03 — غرفة المونتاج</span>
+          <h2>مونتاج <span class="grad">احترافي</span></h2>
+          <p>قص، تصحيح ألوان، هندسة صوت، موشن جرافيك وكابشن عربي — شاهد اللقطة تنتقل مباشرة من الكاميرا إلى شاشة المونتاج.</p>
+        </div>
+        <div class="panel" data-i="4">
+          <span class="kicker">04 — التسليم</span>
+          <h2>فيديو جاهز <span class="grad">لكل المنصات</span></h2>
+          <p>من الفكرة إلى النشر — ريلز، يوتيوب، شاشات العيادة. نسلّمك النسخة النهائية بكل المقاسات.</p>
+          <div class="hero-cta">
+            <a class="btn" href="#contact">ابدأ مشروعك</a>
+            <a class="btn btn-ghost" href="tel:+9647738223911" dir="ltr">07738223911</a>
+          </div>
+        </div>
       </div>
+
+      <div class="progress" aria-hidden="true">
+        <i class="on"></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="scroll-hint" id="scrollHint" aria-hidden="true"><span></span>مرّر للأسفل</div>
     </div>
   </section>
 
@@ -345,6 +358,8 @@
     <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .3-3.4-.7-2.9-1.2-4.7-4.1-4.9-4.3-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.2.2-.3.4-.1.7.2.3.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.7 1.6.3.1.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3.1.2.1.7-.2 1.4z"/></svg>
   </a>
 
+  <script src="vendor/three.min.js"></script>
+  <script src="scene.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
