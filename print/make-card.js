@@ -128,7 +128,7 @@ const SCR = process.argv[2];
   await p.goto('file://' + SCR + '/card_shop.html'); await p.waitForTimeout(1500);
   await p.pdf({ path: OUT + '/ProStudio-Business-Card-2pages.pdf', width: '96mm', height: '56mm', printBackground: true });
   await p.goto('file://' + SCR + '/card_a4.html'); await p.waitForTimeout(1500);
-  await p.pdf({ path: OUT + '/ProStudio-cards-A4.pdf', format: 'A4', printBackground: true });
+  await p.pdf({ path: OUT + '/ProStudio-Cards-A4-10-per-sheet.pdf', format: 'A4', printBackground: true });
 
   // Preview PNG (trim size, front + back)
   const pv = await br.newPage({ deviceScaleFactor: 4, viewport: { width: 760, height: 460 } });
