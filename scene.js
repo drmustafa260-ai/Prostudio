@@ -38,7 +38,7 @@
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const scene = new THREE.Scene();
-  const BG = 0x05080f;
+  const BG = 0x120d08;
   scene.background = new THREE.Color(BG);
   scene.fog = new THREE.FogExp2(BG, 0.075);
 
@@ -49,7 +49,7 @@
     const env = new THREE.Scene();
     const room = new THREE.Mesh(
       new THREE.BoxGeometry(10, 6, 10),
-      new THREE.MeshBasicMaterial({ color: 0x0a0e16, side: THREE.BackSide })
+      new THREE.MeshBasicMaterial({ color: 0x140f0a, side: THREE.BackSide })
     );
     env.add(room);
     const panel = (c, x, y, z, w, h, ry) => {
@@ -60,8 +60,8 @@
     };
     panel(0xffffff, 0, 2.8, 0, 4, 1.2); // top
     env.children[env.children.length - 1].rotation.x = Math.PI / 2;
-    panel(0x6fe9dc, -4.9, 1, 0, 3, 2, Math.PI / 2);
-    panel(0x7cc8ff, 4.9, 1, 0, 3, 2, -Math.PI / 2);
+    panel(0xffb27a, -4.9, 1, 0, 3, 2, Math.PI / 2);
+    panel(0xffd2a0, 4.9, 1, 0, 3, 2, -Math.PI / 2);
     panel(0xffe6cc, 0, 1, -4.9, 4, 1.5, 0);
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(env, 0.04).texture;
@@ -73,10 +73,10 @@
     black: new THREE.MeshStandardMaterial({ color: 0x0b0c0f, metalness: 0.45, roughness: 0.55 }),
     rubber: new THREE.MeshStandardMaterial({ color: 0x101113, metalness: 0, roughness: 0.92 }),
     alu: new THREE.MeshStandardMaterial({ color: 0x8a919c, metalness: 0.9, roughness: 0.28 }),
-    teal: new THREE.MeshStandardMaterial({ color: 0x14b8a6, metalness: 0.6, roughness: 0.3 }),
+    teal: new THREE.MeshStandardMaterial({ color: 0xf16619, metalness: 0.6, roughness: 0.3 }),
     red: new THREE.MeshStandardMaterial({ color: 0xc81e3a, metalness: 0.4, roughness: 0.4 }),
-    glass: new THREE.MeshPhysicalMaterial({ color: 0x0a2230, metalness: 0.1, roughness: 0.04, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 2.5, emissive: 0x03161c }),
-    wood: new THREE.MeshStandardMaterial({ color: 0x15171c, metalness: 0.2, roughness: 0.6 }),
+    glass: new THREE.MeshPhysicalMaterial({ color: 0x24160a, metalness: 0.1, roughness: 0.04, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 2.5, emissive: 0x1c0d03 }),
+    wood: new THREE.MeshStandardMaterial({ color: 0x6e4b2c, metalness: 0.2, roughness: 0.6 }),
     fabric: new THREE.MeshStandardMaterial({ color: 0x0f1012, roughness: 1 }),
     case: new THREE.MeshStandardMaterial({ color: 0x23272e, metalness: 0.35, roughness: 0.6 }),
     glow: (c, i) => new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: i || 2, toneMapped: false }),
@@ -123,18 +123,18 @@
   /* ---------- Floor, wall, neon sign ---------- */
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(40, 40),
-    new THREE.MeshStandardMaterial({ color: 0x0a0f18, metalness: 0.35, roughness: 0.42 })
+    new THREE.MeshStandardMaterial({ color: 0x17110b, metalness: 0.35, roughness: 0.42 })
   );
   floor.rotation.x = -Math.PI / 2;
   floor.receiveShadow = true;
   scene.add(floor);
-  const grid = new THREE.GridHelper(40, 80, 0x14b8a6, 0x14b8a6);
+  const grid = new THREE.GridHelper(40, 80, 0xf16619, 0xf16619);
   grid.material.transparent = true;
   grid.material.opacity = 0.06;
   grid.position.y = 0.002;
   scene.add(grid);
 
-  const wall = new THREE.Mesh(new THREE.PlaneGeometry(16, 6), new THREE.MeshStandardMaterial({ color: 0x0b111c, roughness: 0.9 }));
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(16, 6), new THREE.MeshStandardMaterial({ color: 0x1c140c, roughness: 0.9 }));
   wall.position.set(0.5, 3, -4.2);
   wall.receiveShadow = true;
   scene.add(wall);
@@ -147,12 +147,12 @@
     g.font = "900 118px Cairo, Arial, sans-serif";
     g.textAlign = "center";
     g.textBaseline = "middle";
-    g.shadowColor = "#14b8a6";
+    g.shadowColor = "#F16619";
     g.shadowBlur = 30;
-    g.fillStyle = "#c9fff8";
+    g.fillStyle = "#ffe3cf";
     g.fillText("PRO", 335, 130);
-    g.shadowColor = "#38bdf8";
-    g.fillStyle = "#e2f5ff";
+    g.shadowColor = "#778A3F";
+    g.fillStyle = "#f1f5dc";
     g.fillText("STUDIO", 700, 130);
     // red medical cross
     g.shadowColor = "#ff2d55";
@@ -162,12 +162,12 @@
     const m = new THREE.Mesh(new THREE.PlaneGeometry(4, 1), new THREE.MeshBasicMaterial({ map: s.t, transparent: true, toneMapped: false, depthWrite: false }));
     m.position.set(0.3, 3.2, -4.15);
     scene.add(m);
-    const l = new THREE.PointLight(0x2dd4bf, 1.2, 5, 2);
+    const l = new THREE.PointLight(0xf58a4b, 1.2, 5, 2);
     l.position.set(0.3, 3.1, -3.6);
     scene.add(l);
     // vertical LED strips
     [-4.5].forEach((x) => {
-      const strip = box(scene, 0.05, 3.6, 0.05, M.glow(0x38bdf8, 1.6), x, 1.9, -4.1);
+      const strip = box(scene, 0.05, 3.6, 0.05, M.glow(0x778a3f, 1.6), x, 1.9, -4.1);
       strip.castShadow = false;
     });
   })();
@@ -178,17 +178,17 @@
   dnaGroup.position.copy(DNA_POS);
   scene.add(dnaGroup);
   cyl(dnaGroup, 0.42, 0.48, 0.5, M.black, 0, 0.25, 0, 48);
-  const topRing = add(dnaGroup, new THREE.Mesh(new THREE.TorusGeometry(0.4, 0.012, 8, 64), M.glow(0x14b8a6, 2.2)), 0, 0.505, 0);
+  const topRing = add(dnaGroup, new THREE.Mesh(new THREE.TorusGeometry(0.4, 0.012, 8, 64), M.glow(0xf16619, 2.2)), 0, 0.505, 0);
   topRing.rotation.x = Math.PI / 2;
-  cyl(dnaGroup, 0.39, 0.39, 0.012, new THREE.MeshStandardMaterial({ color: 0x0c1c22, metalness: 0.8, roughness: 0.2 }), 0, 0.5, 0, 48);
+  cyl(dnaGroup, 0.39, 0.39, 0.012, new THREE.MeshStandardMaterial({ color: 0x2a1c10, metalness: 0.8, roughness: 0.2 }), 0, 0.5, 0, 48);
   const helix = new THREE.Group();
   dnaGroup.add(helix);
   {
     const N = 34;
     const sphereG = new THREE.SphereGeometry(0.045, 20, 14);
-    const mA = new THREE.MeshPhysicalMaterial({ color: 0x14b8a6, emissive: 0x0a5f57, metalness: 0.2, roughness: 0.15, clearcoat: 1 });
-    const mB = new THREE.MeshPhysicalMaterial({ color: 0x38bdf8, emissive: 0x0a3a5c, metalness: 0.2, roughness: 0.15, clearcoat: 1 });
-    const rungMats = [M.glow(0xf43f5e, 1.2), M.glow(0xfbbf24, 1.1), M.glow(0xa78bfa, 1.2), M.glow(0x34d399, 1.1)];
+    const mA = new THREE.MeshPhysicalMaterial({ color: 0xf16619, emissive: 0x6b2a08, metalness: 0.2, roughness: 0.15, clearcoat: 1 });
+    const mB = new THREE.MeshPhysicalMaterial({ color: 0x778a3f, emissive: 0x2f3a14, metalness: 0.2, roughness: 0.15, clearcoat: 1 });
+    const rungMats = [M.glow(0xf43f5e, 1.2), M.glow(0xffd2a0, 1.1), M.glow(0x9bb052, 1.2), M.glow(0x9bb052, 1.1)];
     for (let i = 0; i < N; i++) {
       const t = i / (N - 1);
       const y = 0.72 + t * 1.45;
@@ -205,14 +205,14 @@
   [0.9, 1.45, 2.0].forEach((y, i) => {
     const ring = new THREE.Mesh(
       new THREE.TorusGeometry(0.46 + i * 0.04, 0.006, 8, 96),
-      new THREE.MeshBasicMaterial({ color: 0x5eead4, transparent: true, opacity: 0.5, toneMapped: false })
+      new THREE.MeshBasicMaterial({ color: 0xffa86b, transparent: true, opacity: 0.5, toneMapped: false })
     );
     ring.position.y = y;
     ring.rotation.x = Math.PI / 2;
     dnaGroup.add(ring);
     holoRings.push(ring);
   });
-  const dnaLight = new THREE.PointLight(0x2dd4bf, 1.6, 4, 2);
+  const dnaLight = new THREE.PointLight(0xf58a4b, 1.6, 4, 2);
   dnaLight.position.set(0, 1.5, 0.4);
   dnaGroup.add(dnaLight);
 
@@ -220,7 +220,7 @@
   const ecgPoints = 160;
   const ecgGeo = new THREE.BufferGeometry();
   ecgGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(ecgPoints * 3), 3));
-  const ecgLine = new THREE.Line(ecgGeo, new THREE.LineBasicMaterial({ color: 0x5eead4, transparent: true, opacity: 0.9, toneMapped: false }));
+  const ecgLine = new THREE.Line(ecgGeo, new THREE.LineBasicMaterial({ color: 0xffa86b, transparent: true, opacity: 0.9, toneMapped: false }));
   ecgLine.position.set(0, 2.55, -2.3);
   scene.add(ecgLine);
   function ecgShape(x) {
@@ -297,7 +297,7 @@
     ff.rotation.z = Math.PI / 2;
     // battery (V-mount) with LEDs
     box(cine, 0.13, 0.13, 0.05, M.case, 0, -0.01, -0.165);
-    for (let i = 0; i < 4; i++) box(cine, 0.012, 0.006, 0.004, M.glow(0x34d399, 2.5), -0.03 + i * 0.02, 0.04, -0.192);
+    for (let i = 0; i < 4; i++) box(cine, 0.012, 0.006, 0.004, M.glow(0x9bb052, 2.5), -0.03 + i * 0.02, 0.04, -0.192);
     // tally / REC light
     const tally = add(cine, new THREE.Mesh(new THREE.SphereGeometry(0.008, 12, 10), M.glow(0xff2d55, 4)), 0.05, 0.075, 0.137);
     cine.userData.tally = tally;
@@ -374,7 +374,7 @@
   keyLight.spot.castShadow = true;
   keyLight.spot.shadow.mapSize.set(isMobile ? 512 : 1024, isMobile ? 512 : 1024);
   keyLight.spot.shadow.bias = -0.0008;
-  softbox(1.45, -0.9, 1.75, 0xdff3ff);
+  softbox(1.45, -0.9, 1.75, 0xfff0dc);
 
   // LED panel on C-stand (rim light)
   {
@@ -391,8 +391,8 @@
     p.lookAt(new THREE.Vector3(0.6, 1.3, 1.1));
     g.add(p);
     box(p, 0.36, 0.24, 0.04, M.black, 0, 0, 0);
-    add(p, new THREE.Mesh(new THREE.PlaneGeometry(0.32, 0.2), new THREE.MeshBasicMaterial({ color: 0x7dd3fc, toneMapped: false })), 0, 0, 0.021);
-    const rim = new THREE.SpotLight(0x60a5fa, 1.8, 6, 0.8, 0.7, 1.5);
+    add(p, new THREE.Mesh(new THREE.PlaneGeometry(0.32, 0.2), new THREE.MeshBasicMaterial({ color: 0xffe0bd, toneMapped: false })), 0, 0, 0.021);
+    const rim = new THREE.SpotLight(0xa3b05f, 1.8, 6, 0.8, 0.7, 1.5);
     rim.position.set(-0.6, 1.65, -3.1);
     rim.target.position.set(0, 1.3, -2);
     scene.add(rim, rim.target);
@@ -422,7 +422,7 @@
   desk.position.copy(DESK);
   scene.add(desk);
   box(desk, 1.7, 0.05, 0.8, M.wood, 0, 0.75, 0);
-  box(desk, 1.7, 0.012, 0.8, M.glow(0x14b8a6, 0.6), 0, 0.72, 0).scale.set(0.98, 1, 0.96); // underglow
+  box(desk, 1.7, 0.012, 0.8, M.glow(0xf16619, 0.6), 0, 0.72, 0).scale.set(0.98, 1, 0.96); // underglow
   box(desk, 0.05, 0.72, 0.72, M.black, -0.8, 0.36, 0);
   box(desk, 0.05, 0.72, 0.72, M.black, 0.8, 0.36, 0);
   box(desk, 1.55, 0.3, 0.02, M.black, 0, 0.5, -0.36);
@@ -439,7 +439,7 @@
   const screen = new THREE.Mesh(new THREE.PlaneGeometry(SW, SH), new THREE.MeshBasicMaterial({ map: ui.t, toneMapped: false }));
   screen.position.z = 0.001;
   mon.add(screen);
-  const monGlow = new THREE.PointLight(0x7cc8ff, 0.9, 2.2, 2);
+  const monGlow = new THREE.PointLight(0xffd2a0, 0.9, 2.2, 2);
   monGlow.position.set(0, 1.15, 0.2);
   desk.add(monGlow);
 
@@ -459,7 +459,7 @@
   box(desk, 0.46, 0.018, 0.15, M.black, -0.05, 0.785, 0.12);
   {
     const keyG = new THREE.BoxGeometry(0.022, 0.01, 0.022);
-    const keys = new THREE.InstancedMesh(keyG, new THREE.MeshStandardMaterial({ color: 0x1c1f26, emissive: 0x0d3d3a, metalness: 0.3, roughness: 0.5 }), 17 * 5);
+    const keys = new THREE.InstancedMesh(keyG, new THREE.MeshStandardMaterial({ color: 0x1c1f26, emissive: 0x5a2408, metalness: 0.3, roughness: 0.5 }), 17 * 5);
     const mtx = new THREE.Matrix4();
     let k = 0;
     for (let r = 0; r < 5; r++)
@@ -472,12 +472,12 @@
   // mouse
   const mouse = add(desk, new THREE.Mesh(new THREE.SphereGeometry(0.035, 20, 12), M.black), 0.32, 0.79, 0.14);
   mouse.scale.set(0.8, 0.35, 1.2);
-  box(desk, 0.003, 0.004, 0.02, M.glow(0x14b8a6, 3), 0.32, 0.803, 0.12);
+  box(desk, 0.003, 0.004, 0.02, M.glow(0xf16619, 3), 0.32, 0.803, 0.12);
   // jog-wheel edit controller
   box(desk, 0.24, 0.03, 0.15, M.case, -0.55, 0.79, 0.12);
   cyl(desk, 0.05, 0.05, 0.02, M.alu, -0.55, 0.815, 0.13, 40);
   cyl(desk, 0.01, 0.01, 0.022, M.glow(0xf43f5e, 2), -0.52, 0.818, 0.11, 12);
-  for (let i = 0; i < 6; i++) box(desk, 0.018, 0.008, 0.018, M.glow(i < 2 ? 0x34d399 : 0x38bdf8, 1.5), -0.65 + (i % 3) * 0.025, 0.81, 0.07 + Math.floor(i / 3) * 0.025);
+  for (let i = 0; i < 6; i++) box(desk, 0.018, 0.008, 0.018, M.glow(i < 2 ? 0x9bb052 : 0x778a3f, 1.5), -0.65 + (i % 3) * 0.025, 0.81, 0.07 + Math.floor(i / 3) * 0.025);
   // speakers
   [-0.62, 0.42].forEach((x) => {
     box(desk, 0.13, 0.22, 0.16, M.black, x === 0.42 ? 0.48 : x, 0.885, -0.25);
@@ -503,16 +503,16 @@
   tower.position.set(1.05, 0, -0.05);
   desk.add(tower);
   box(tower, 0.24, 0.5, 0.46, M.black, 0, 0.25, 0);
-  const sideGlass = add(tower, new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.44), new THREE.MeshPhysicalMaterial({ color: 0x0a1820, transparent: true, opacity: 0.55, roughness: 0.05, metalness: 0 })), -0.121, 0.25, 0);
+  const sideGlass = add(tower, new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.44), new THREE.MeshPhysicalMaterial({ color: 0x1f150c, transparent: true, opacity: 0.55, roughness: 0.05, metalness: 0 })), -0.121, 0.25, 0);
   sideGlass.rotation.y = -Math.PI / 2;
   const fans = [];
   [0.36, 0.14].forEach((y, i) => {
-    const f = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.008, 8, 32), M.glow(i ? 0x38bdf8 : 0x14b8a6, 3));
+    const f = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.008, 8, 32), M.glow(i ? 0x778a3f : 0xf16619, 3));
     f.position.set(0, y, 0.232);
     tower.add(f);
     fans.push(f);
   });
-  box(tower, 0.005, 0.4, 0.005, M.glow(0xa78bfa, 2.5), -0.11, 0.25, 0.2);
+  box(tower, 0.005, 0.4, 0.005, M.glow(0x9bb052, 2.5), -0.11, 0.25, 0.2);
   // chair
   {
     const ch = new THREE.Group();
@@ -560,15 +560,15 @@
     dot.ctx.fillStyle = gr;
     dot.ctx.fillRect(0, 0, 64, 64);
   }
-  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ size: 0.03, map: dot.t, color: 0xbfeee8, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending }));
+  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ size: 0.03, map: dot.t, color: 0xffe2c4, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending }));
   scene.add(dust);
 
   /* ---------- Ambient light ---------- */
-  scene.add(new THREE.HemisphereLight(0x8ab4ff, 0x080b12, 0.35));
-  const camFill = new THREE.PointLight(0xdbeafe, 0.9, 3, 2);
+  scene.add(new THREE.HemisphereLight(0xffcf9e, 0x0f0a06, 0.35));
+  const camFill = new THREE.PointLight(0xffeedd, 0.9, 3, 2);
   camFill.position.set(-0.7, 1.9, -0.1);
   scene.add(camFill);
-  const camRim = new THREE.PointLight(0x2dd4bf, 0.8, 2.5, 2);
+  const camRim = new THREE.PointLight(0xf58a4b, 0.8, 2.5, 2);
   camRim.position.set(-2.4, 1.7, 0.9);
   scene.add(camRim);
   const deskKey = new THREE.SpotLight(0xffffff, 0.9, 6, 0.6, 0.8, 1.5);
@@ -591,12 +591,12 @@
   /* ---------- Editing UI drawing ---------- */
   const clips = [
     // track, start, len, color, label
-    [0, 0.08, 0.16, "#7c3aed", "Motion: Heart"],
-    [0, 0.55, 0.2, "#7c3aed", "Logo Reveal"],
-    [1, 0.0, 0.22, "#0ea5e9", "Intro_4K"],
-    [1, 0.22, 0.3, "#14b8a6", "Dr_Interview_A"],
-    [1, 0.52, 0.18, "#0ea5e9", "B-Roll_Clinic"],
-    [1, 0.7, 0.3, "#14b8a6", "Dr_Interview_B"],
+    [0, 0.08, 0.16, "#6E4B2C", "Motion: Heart"],
+    [0, 0.55, 0.2, "#6E4B2C", "Logo Reveal"],
+    [1, 0.0, 0.22, "#778A3F", "Intro_4K"],
+    [1, 0.22, 0.3, "#F16619", "Dr_Interview_A"],
+    [1, 0.52, 0.18, "#778A3F", "B-Roll_Clinic"],
+    [1, 0.7, 0.3, "#F16619", "Dr_Interview_B"],
     [2, 0.05, 0.9, "#f59e0b", "كابشن عربي"],
   ];
   function roundRect(g, x, y, w, h, r) {
@@ -617,16 +617,16 @@
   }
   function drawUI(t) {
     const g = ui.ctx;
-    g.fillStyle = "#0b0f16";
+    g.fillStyle = "#120d09";
     g.fillRect(0, 0, UIW, UIH);
     // top bar
-    g.fillStyle = "#121824";
+    g.fillStyle = "#1c150f";
     g.fillRect(0, 0, UIW, 26);
     g.font = "600 13px Arial, sans-serif";
     g.textBaseline = "middle";
-    g.fillStyle = "#8b98ad";
+    g.fillStyle = "#a8957f";
     ["File", "Edit", "Clip", "Sequence", "Color", "Audio", "Graphics", "Export"].forEach((s, i) => g.fillText(s, 14 + i * 66, 13));
-    g.fillStyle = "#5eead4";
+    g.fillStyle = "#ffa86b";
     g.fillText("ProStudio — Medical_Promo.prproj", 620, 13);
     for (let i = 0; i < 3; i++) {
       g.fillStyle = ["#ff5f57", "#febc2e", "#28c840"][i];
@@ -635,25 +635,25 @@
       g.fill();
     }
     // media bin
-    g.fillStyle = "#0f1520";
+    g.fillStyle = "#18120c";
     g.fillRect(6, 34, 312, 266);
-    g.fillStyle = "#cbd5e1";
+    g.fillStyle = "#e8dccb";
     g.font = "700 13px Arial";
     g.fillText("Media Bin", 16, 48);
-    const thumbs = [["#0ea5e9", "Surgery_A"], ["#14b8a6", "Interview"], ["#7c3aed", "Heart_3D"], ["#db2777", "Clinic_Tour"], ["#f59e0b", "Logo"], ["#22c55e", "Dental_BR"]];
+    const thumbs = [["#778A3F", "Surgery_A"], ["#F16619", "Interview"], ["#6E4B2C", "Heart_3D"], ["#b8501a", "Clinic_Tour"], ["#f59e0b", "Logo"], ["#778A3F", "Dental_BR"]];
     thumbs.forEach(([c, n], i) => {
       const x = 16 + (i % 3) * 100, y = 64 + Math.floor(i / 3) * 110;
       const gr = g.createLinearGradient(x, y, x + 90, y + 60);
       gr.addColorStop(0, c);
-      gr.addColorStop(1, "#0b1220");
+      gr.addColorStop(1, "#140e09");
       g.fillStyle = gr;
       roundRect(g, x, y, 90, 60, 6);
       g.fill();
-      g.fillStyle = "#94a3b8";
+      g.fillStyle = "#bca993";
       g.font = "12px Arial";
       g.fillText(n + ".mp4", x, y + 76);
       if ((Math.floor(t * 0.8) % 6) === i) {
-        g.strokeStyle = "#5eead4";
+        g.strokeStyle = "#ffa86b";
         g.lineWidth = 2;
         roundRect(g, x - 2, y - 2, 94, 64, 7);
         g.stroke();
@@ -662,13 +662,13 @@
     // viewer frame
     g.fillStyle = "#000";
     g.fillRect(VX - 4, VY - 4, VW + 8, VH + 8);
-    g.fillStyle = "#cbd5e1";
+    g.fillStyle = "#e8dccb";
     g.font = "600 13px monospace";
     g.fillText(tc(t), VX, VY + VH + 20);
-    g.fillStyle = "#64748b";
+    g.fillStyle = "#8a7864";
     g.fillText("3840 × 2160  ·  25 fps", VX + 250, VY + VH + 20);
     // transport icons
-    g.fillStyle = "#e2e8f0";
+    g.fillStyle = "#f3e9dc";
     g.beginPath();
     const cx = VX + VW / 2;
     g.moveTo(cx - 6, VY + VH + 12);
@@ -677,24 +677,24 @@
     g.fill();
     // color panel
     const px = 800;
-    g.fillStyle = "#0f1520";
+    g.fillStyle = "#18120c";
     g.fillRect(px, 34, UIW - px - 6, 266);
-    g.fillStyle = "#cbd5e1";
+    g.fillStyle = "#e8dccb";
     g.font = "700 13px Arial";
     g.fillText("Lumetri Color", px + 12, 48);
     ["Shadows", "Midtones", "Highlights"].forEach((n, i) => {
       const wx = px + 62 + i * 112, wy = 130, r = 44;
       const grd = g.createConicGradient ? g.createConicGradient(0, wx, wy) : null;
       if (grd) {
-        ["#f43f5e", "#f59e0b", "#84cc16", "#14b8a6", "#3b82f6", "#a855f7", "#f43f5e"].forEach((c, k) => grd.addColorStop(k / 6, c));
+        ["#f43f5e", "#f59e0b", "#84cc16", "#F16619", "#9bb052", "#a855f7", "#f43f5e"].forEach((c, k) => grd.addColorStop(k / 6, c));
         g.fillStyle = grd;
-      } else g.fillStyle = "#334155";
+      } else g.fillStyle = "#3a2a1a";
       g.globalAlpha = 0.55;
       g.beginPath();
       g.arc(wx, wy, r, 0, 7);
       g.fill();
       g.globalAlpha = 1;
-      g.strokeStyle = "#0b0f16";
+      g.strokeStyle = "#120d09";
       g.lineWidth = 3;
       g.beginPath();
       g.arc(wx, wy, r * 0.35, 0, 7);
@@ -704,32 +704,32 @@
       g.beginPath();
       g.arc(wx + Math.cos(a) * 14, wy + Math.sin(a) * 14, 4, 0, 7);
       g.fill();
-      g.fillStyle = "#94a3b8";
+      g.fillStyle = "#bca993";
       g.font = "12px Arial";
       g.fillText(n, wx - 26, wy + r + 18);
     });
     // audio meters
     for (let i = 0; i < 2; i++) {
       const lvl = 0.55 + 0.35 * Math.abs(Math.sin(t * 7 + i * 1.3)) * Math.abs(Math.sin(t * 2.3 + i));
-      g.fillStyle = "#1e293b";
+      g.fillStyle = "#2a1f15";
       g.fillRect(px + 40 + i * 22, 210, 14, 80);
       const gr = g.createLinearGradient(0, 290, 0, 210);
-      gr.addColorStop(0, "#22c55e");
+      gr.addColorStop(0, "#778A3F");
       gr.addColorStop(0.7, "#eab308");
       gr.addColorStop(1, "#ef4444");
       g.fillStyle = gr;
       g.fillRect(px + 40 + i * 22, 290 - 80 * lvl, 14, 80 * lvl);
     }
-    g.fillStyle = "#94a3b8";
+    g.fillStyle = "#bca993";
     g.fillText("-14 LUFS", px + 100, 250);
     g.fillText("Denoise ✓   EQ ✓", px + 100, 272);
     // timeline
     const ty = 312, tl = 70, tw = UIW - tl - 10;
-    g.fillStyle = "#0f1520";
+    g.fillStyle = "#18120c";
     g.fillRect(6, ty, UIW - 12, UIH - ty - 6);
-    g.fillStyle = "#1a2232";
+    g.fillStyle = "#241a12";
     g.fillRect(tl, ty + 4, tw, 20);
-    g.fillStyle = "#64748b";
+    g.fillStyle = "#8a7864";
     g.font = "11px monospace";
     for (let i = 0; i <= 20; i++) {
       const x = tl + (i / 20) * tw;
@@ -739,9 +739,9 @@
     const rows = ["V3", "V2", "V1", "A1", "A2"];
     rows.forEach((n, r) => {
       const y = ty + 30 + r * 32;
-      g.fillStyle = "#151c2a";
+      g.fillStyle = "#1f1710";
       g.fillRect(tl, y, tw, 28);
-      g.fillStyle = "#94a3b8";
+      g.fillStyle = "#bca993";
       g.font = "700 12px Arial";
       g.fillText(n, 24, y + 14);
     });
@@ -766,7 +766,7 @@
     // audio waveforms
     [3, 4].forEach((r, k) => {
       const y = ty + 30 + r * 32 + 14;
-      g.fillStyle = k ? "#3b82f6" : "#22c55e";
+      g.fillStyle = k ? "#9bb052" : "#778A3F";
       g.globalAlpha = 0.75;
       for (let x = 0; x < tw; x += 3) {
         const v = (Math.abs(Math.sin(x * 0.05 + k) * Math.sin(x * 0.013 + 2 * k)) * 0.8 + 0.15) * 11;
@@ -788,13 +788,13 @@
 
   function drawScopes(t) {
     const g = sc.ctx, W = 512, H = 300;
-    g.fillStyle = "#06090f";
+    g.fillStyle = "#0f0b07";
     g.fillRect(0, 0, W, H);
-    g.fillStyle = "#94a3b8";
+    g.fillStyle = "#bca993";
     g.font = "600 13px Arial";
     g.fillText("RGB Parade", 12, 20);
     g.fillText("Vectorscope", 352, 20);
-    ["255,70,90", "60,220,120", "70,150,255"].forEach((c, k) => {
+    ["241,102,25", "155,176,82", "200,140,90"].forEach((c, k) => {
       const x0 = 12 + k * 108;
       g.strokeStyle = "rgba(255,255,255,.08)";
       g.strokeRect(x0, 30, 100, 250);
@@ -819,10 +819,10 @@
     g.stroke();
     for (let i = 0; i < 300; i++) {
       const a = Math.random() * 6.28, r = Math.random() * 30;
-      g.fillStyle = "rgba(94,234,212,.5)";
+      g.fillStyle = "rgba(255,168,107,.55)";
       g.fillRect(cx + Math.cos(a) * r + Math.sin(t) * 10 - 12, cy + Math.sin(a) * r * 0.7 - 8, 2, 2);
     }
-    g.fillStyle = "#5eead4";
+    g.fillStyle = "#ffa86b";
     g.fillText("Skin Tone Line ✓", 352, 280);
     sc.t.needsUpdate = true;
   }
