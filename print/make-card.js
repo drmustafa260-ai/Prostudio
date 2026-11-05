@@ -126,7 +126,7 @@ const SCR = process.argv[2];
   const br = await chromium.launch();
   const p = await br.newPage();
   await p.goto('file://' + SCR + '/card_shop.html'); await p.waitForTimeout(1500);
-  await p.pdf({ path: OUT + '/ProStudio-card-print-shop.pdf', width: '96mm', height: '56mm', printBackground: true });
+  await p.pdf({ path: OUT + '/ProStudio-Business-Card-2pages.pdf', width: '96mm', height: '56mm', printBackground: true });
   await p.goto('file://' + SCR + '/card_a4.html'); await p.waitForTimeout(1500);
   await p.pdf({ path: OUT + '/ProStudio-cards-A4.pdf', format: 'A4', printBackground: true });
 
