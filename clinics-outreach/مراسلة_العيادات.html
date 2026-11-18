@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: one narrow column — settings card on top, then a checklist of clinics, one tap each */
+/* Layout: one narrow column — message settings, then a selectable doctor list grouped by area, then a sticky send bar */
 :root {
   --bg: #f3f6f5; --surface: #ffffff; --fg: #14201d; --muted: #5b6b67; --line: #dbe3e0;
   --accent: #0f7a5c; --accent-fg: #ffffff; --accent-soft: #e2f2ec; --warn: #9a5b00; --warn-soft: #fdf1dc;
@@ -16,175 +16,239 @@
   --accent: #3fbf93; --accent-fg: #06140f; --accent-soft: #173a2e; --warn: #f0b860; --warn-soft: #3a2b12; color-scheme: dark }
 
 body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.6; }
-.wrap { max-width: 640px; margin: 0 auto; padding-block: 20px 48px;
+.wrap { max-width: 640px; margin: 0 auto; padding-block: 20px 120px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: flex; flex-direction: column; gap: 16px; }
 h1 { font-size: 1.5rem; margin: 0; text-wrap: balance; }
+h2 { font-size: 1.05rem; margin: 8px 0 0; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .lede { margin: 0; color: var(--muted); }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-label { font-weight: 600; font-size: .9rem; display: block; margin-bottom: 4px; }
+details.panel summary { font-weight: 600; cursor: pointer; }
+.field label { font-weight: 600; font-size: .9rem; display: block; margin-bottom: 4px; }
 input[type=text], input[type=url], textarea { width: 100%; box-sizing: border-box; font: inherit; color: var(--fg);
   background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
-textarea { min-height: 220px; resize: vertical; }
-input:focus-visible, textarea:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+textarea { min-height: 230px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .hint { font-size: .82rem; color: var(--muted); margin: 0; }
 .note { background: var(--warn-soft); color: var(--warn); border-radius: 10px; padding: 10px 12px; font-size: .88rem; margin: 0; }
-.progress { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.bar { flex: 1 1 160px; height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
-.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
-.count { font-weight: 600; font-variant-numeric: tabular-nums; }
+.linkbtn { background: none; border: 0; color: var(--accent); font: inherit; font-size: .85rem; font-weight: 600; cursor: pointer; padding: 0; }
 ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
-  display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: center; }
-li.done { opacity: .6; }
-li.done .name { text-decoration: line-through; }
+li > label { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: start; cursor: pointer; }
+li > label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+li input[type=checkbox] { width: 20px; height: 20px; margin: 3px 0 0; accent-color: var(--accent); grid-row: span 2; }
 .name { font-weight: 600; min-width: 0; }
-.meta { font-size: .82rem; color: var(--muted); grid-column: 1; min-width: 0; }
-.phone { direction: ltr; unicode-bidi: isolate; user-select: all; }
+.meta { font-size: .82rem; color: var(--muted); min-width: 0; }
+.phone { direction: ltr; unicode-bidi: isolate; }
 .flag { color: var(--warn); }
-.actions { grid-row: 1 / span 2; grid-column: 2; display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
-.send { background: var(--accent); color: var(--accent-fg); text-decoration: none; text-align: center;
-  font-weight: 600; border-radius: 10px; padding: 8px 14px; white-space: nowrap; }
-.send[aria-disabled=true] { background: var(--line); color: var(--muted); pointer-events: none; }
-.tick { display: flex; gap: 6px; align-items: center; font-size: .82rem; color: var(--muted); cursor: pointer; justify-content: center; }
-.tick input { width: 18px; height: 18px; accent-color: var(--accent); }
-.excluded { font-size: .85rem; color: var(--muted); margin: 0; }
-@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+.badge { font-size: .72rem; font-weight: 600; border-radius: 99px; padding: 1px 8px; background: var(--accent); color: var(--accent-fg); margin-inline-start: 6px; }
+.bar { position: fixed; inset: auto 0 0 0; background: var(--surface); border-top: 1px solid var(--line);
+  padding-block: 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar-inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.primary { background: var(--accent); color: var(--accent-fg); border: 0; border-radius: 10px; font: inherit; font-weight: 600;
+  padding: 10px 16px; cursor: pointer; text-decoration: none; text-align: center; flex: 1 1 auto; }
+.primary[disabled], .primary[aria-disabled=true] { background: var(--line); color: var(--muted); cursor: default; pointer-events: none; }
+.ghost { background: none; border: 1px solid var(--line); color: var(--fg); border-radius: 10px; font: inherit; padding: 10px 14px; cursor: pointer; }
+.sel { font-weight: 600; font-variant-numeric: tabular-nums; }
+/* send-run view */
+.run { display: flex; flex-direction: column; gap: 14px; }
+.run .who { font-size: 1.25rem; font-weight: 700; margin: 0; }
+.run .step { color: var(--muted); font-variant-numeric: tabular-nums; margin: 0; }
+.preview { white-space: pre-wrap; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: .9rem; margin: 0; }
+.big { font-size: 1.05rem; padding: 14px 16px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.row > * { flex: 1 1 140px; }
 </style>
 
 <div class="wrap" dir="rtl" lang="ar">
   <header>
-    <h1>مراسلة عيادات الكرخ</h1>
-    <p class="lede">اكتب اسمك ورابط الفيديو مرة وحدة. بعدين لكل عيادة دوس «واتساب»، تنفتح المحادثة والرسالة جاهزة باسم العيادة، وإنت بس دوس إرسال.</p>
+    <h1>مراسلة أطباء الكرخ</h1>
+    <p class="lede">أطباء بعياداتهم الخاصة، مو مراكز. حدد الأطباء اللي تريدهم، ودوس «ابدأ الإرسال». الصفحة توديك من دكتور للي بعده، والرسالة جاهزة باسمه.</p>
   </header>
 
-  <section class="panel" aria-label="بيانات الرسالة">
-    <div>
+  <details class="panel" id="setup" open>
+    <summary>الرسالة واسمك</summary>
+    <div class="field">
       <label for="me">اسمك</label>
       <input type="text" id="me" placeholder="مثلاً: مصطفى">
     </div>
-    <div>
+    <div class="field">
       <label for="video">رابط فيديو د. حميد الفهداوي</label>
       <input type="url" id="video" placeholder="https://www.instagram.com/reel/…" dir="ltr">
     </div>
-    <div>
+    <div class="field">
       <label for="tpl">نص الرسالة</label>
       <textarea id="tpl"></textarea>
-      <p class="hint">{العيادة} و{اسمي} و{الفيديو} تتبدل تلقائياً لكل عيادة.</p>
+      <p class="hint">{اللقب} تصير «دكتور» أو «دكتورة»، و{الاسم} اسم الطبيب، و{اسمي} اسمك، و{الفيديو} الرابط.</p>
+      <button type="button" class="linkbtn" id="reset">رجّع النص الأصلي</button>
     </div>
-    <p class="note" id="missing">اكتب اسمك ورابط الفيديو حتى تشتغل أزرار الواتساب.</p>
-  </section>
+  </details>
+  <p class="note" id="missing">اكتب اسمك ورابط الفيديو حتى تگدر تبدي الإرسال.</p>
 
-  <div class="progress" aria-live="polite">
-    <span class="count" id="count"></span>
-    <div class="bar"><i id="fill"></i></div>
+  <div id="lists"></div>
+
+  <p class="hint">ما مضافين لأن ما لگيت إلهم رقم: د. أحمد العاني (باطنية وقلبية، العامرية)، د. عبيدة السامرائي (أطفال، العامرية)، د. هند صفاء وديع (طب أسرة، العامرية)، د. علي السامرائي (تقويم أسنان، العامرية)، د. حسين فوزي رشيد (جراحة، الغزالية)، د. مصطفى إبراهيم (باطنية وقلبية، الغزالية). هذني دورهم بالإنستا.</p>
+</div>
+
+<section class="wrap run" id="runView" dir="rtl" lang="ar" hidden>
+  <p class="step" id="runStep"></p>
+  <p class="who" id="runWho"></p>
+  <p class="meta" id="runMeta"></p>
+  <pre class="preview" id="runText"></pre>
+  <a class="primary big" id="runOpen" target="_blank" rel="noopener">افتح واتساب</a>
+  <div class="row">
+    <button type="button" class="primary" id="runNext">أرسلت، التالي</button>
+    <button type="button" class="ghost" id="runSkip">تخطّي</button>
   </div>
-  <p class="note">أرسل ١٠ رسائل باليوم تقريباً، مو الكل مرة وحدة، حتى ما ينحظر رقمك بالواتساب.</p>
+  <button type="button" class="ghost" id="runStop">وقّف ورجّع للقائمة</button>
+</section>
 
-  <ul id="list"></ul>
-
-  <p class="excluded">ما مضافة حسب طلبك: كلير للأسنان، عيادات الغزالية لطب الأسنان، وعيادة د. عدنان مهند (هم بالغزالية هم).<br>
-  وما مضافة لأن ما إلها رقم: ميرال، ديبونت، د. الراوي، د. التهامي. هذني راسلهم من صفحاتهم.</p>
+<div class="bar" id="bar">
+  <div class="bar-inner">
+    <span class="sel" id="selCount"></span>
+    <button type="button" class="primary" id="start">ابدأ الإرسال</button>
+  </div>
 </div>
 
 <script>
-const clinics = [
-  ["عيادة الأميرات لطب وتجميل الأسنان","أسنان · المنصور","07800083467"],
-  ["عيادة عشتار لطب الأسنان","أسنان · المنصور","07732902288"],
-  ["عيادة الاختصاصيين لطب الأسنان","أسنان · المنصور","07775800068"],
-  ["مركز المتحدة لطب الأسنان","أسنان · المنصور","07800411114"],
-  ["عيادات البيت الأبيض لطب الأسنان","أسنان · الداوودي","07726727380"],
-  ["عيادة د. محمد علي منصور","أسنان · المنطقة غير مؤكدة","07729000038", true],
-  ["عيادات الحارثية لطب الأسنان","أسنان · الحارثية","07823333525"],
-  ["العيادة المثالية لطب الفم والأسنان","أسنان · الحارثية","07826055833"],
-  ["مركز ألاين لطب وزراعة الأسنان","أسنان · اليرموك","07772001002"],
-  ["عيادة ميريام لطب الأسنان","أسنان · اليرموك","07718444222"],
-  ["مركز قبرص لطب الأسنان","أسنان · اليرموك · رقم قديم","07800190787", true],
-  ["عيادة 24 ساعة لطب الأسنان","أسنان · العامرية","07822744773"],
-  ["عيادات القيثارة التخصصية","أسنان وتجميل · العامرية","07816336663"],
-  ["عيادة لوركا لطب الأسنان","أسنان · الكرخ · رقم قديم","07704536572", true],
-  ["عيادة الوسيم لطب الأسنان","أسنان · يمكن مو بالكرخ","07715163033", true],
-  ["عيادة د. هدى علي حميد","تجميل · المنصور","07728649981"],
-  ["مركز ويف للتجميل","تجميل · المنصور","07744455055"],
-  ["مركز البارودي للليزر","تجميل وليزر · اليرموك","07854281562"],
-  ["عيادات الكبيسي للتجميل","تجميل وليزر · اليرموك","07735455191"],
-  ["عيادة د. رواء الجنابي","جلدية وليزر · الحارثية","07709833414"],
-  ["عيادة د. رحيق أحمد","جلدية وليزر · الحارثية","07744440100"],
-  ["عيادة د. أحمد الشمري","تجميل وليزر · الحارثية","07713599047"],
-  ["مركز فينوس للتجميل","ليزر وبشرة · الحارثية","07730753030"],
-  ["عيادة د. ربيعة حامد","نسائية · الحارثية","07719449379"],
-  ["عيادة د. فرح ناعم جاسم","نسائية · الحارثية · منشور قديم","07722778686", true],
-  ["عيادة د. منتهى الجنابي","نسائية · الحارثية","07723608200"],
+// [لقب, اسم, تخصص, عنوان, رقم, ملاحظة]
+const groups = [
+  ["العامرية", [
+    ["دكتور","محمد هيثم حباس","أطفال وحديثي الولادة","شارع المضيف مجاور صيدلية نهر المعين","07828883808"],
+    ["دكتور","بلال ناطق نعمان","باطنية وغدد وسكري","شارع العمل الشعبي قرب صيدلية المطار","07702594485"],
+    ["دكتور","مهند المختار","طب الألم (بورد)","العمل الشعبي - عمارة الشكور","07746700049","ينشر فيديوهات، يمكن عنده مونتير"],
+    ["دكتور","أحمد نزار الدباغ","مسالك بولية وجراحة","شارع العمل الشعبي","07800061262"],
+    ["دكتور","محمد توفيق أحمد","أطفال","مقابل صيدلية المطار","07800965599","المصدر قناة تيليغرام"],
+    ["دكتورة","فائزة يوسف الحسيني","طب عام وباطنية","قرب صيدلية المطار","07805408263"],
+  ]],
+  ["الغزالية", [
+    ["دكتور","علي عدنان العجرش","باطنية","شارع البدالة مجاور صيدلية مها مهدي","07716617709"],
+    ["دكتور","علي لفتة موسى","أنف وأذن وحنجرة","شارع المرور مقابل جامع الصديق","07501600751"],
+    ["دكتورة","خالدة عبدالله الراوي","نسائية وتوليد","قرب شارع دائرة المرور","07819727216"],
+    ["دكتور","محمد بدر حسن","أشعة وسونار","مقابل جامع البر الرحيم","07802008550"],
+    ["دكتورة","دنيا مجيد","التخصص غير مؤكد","شارع مدير الأمن","07830444152","تأكد من تخصصها"],
+    ["دكتور","","باطنية وقلبية","الغزالية","07723675371","ما لگيت اسمه"],
+  ]],
+  ["الحارثية والمنصور", [
+    ["دكتور","رافد بدري العامري","غدد صماء وسكري","الحارثية","07728010575"],
+    ["دكتور","أكرم المهداوي","جملة عصبية","الحارثية - الكندي مجاور مستشفى الحارثية الأهلي","07801799626"],
+    ["دكتور","غزوان عبدالله حسن","عظام وكسور","الحارثية - الكندي مجمع آشور الطبي","07714099298"],
+    ["دكتور","فراس العبيدي","عظام وكسور ومفاصل","الحارثية","07822940864"],
+    ["دكتورة","رواء الجنابي","جلدية وليزر","الحارثية خلف مول بغداد","07709833414"],
+    ["دكتورة","رحيق أحمد","جلدية وليزر","الحارثية عمارة يارزا","07744440100"],
+    ["دكتور","أحمد الشمري","تجميل وليزر","الحارثية نهاية الكندي","07713599047"],
+    ["دكتورة","ربيعة حامد","نسائية وتوليد","الحارثية - الكندي","07719449379"],
+    ["دكتورة","فرح ناعم جاسم","نسائية وعقم","الحارثية - عمارة الربيع","07722778686","المنشور قديم"],
+    ["دكتورة","منتهى الجنابي","نسائية","الحارثية - الكندي","07723608200"],
+    ["دكتورة","هدى علي حميد","تجميل","المنصور - 14 رمضان","07728649981"],
+  ]],
 ];
+const all = groups.flatMap(([, ds]) => ds);
 
-const DEFAULT_TPL = `السلام عليكم، أهلاً بكادر {العيادة} 🌷
-آني {اسمي}، أشتغل مونتاج وصناعة محتوى للعيادات (ريلز إنستا وتيك توك).
+const DEFAULT_TPL = `السلام عليكم {اللقب} {الاسم} 🌷
+آني {اسمي}، أشتغل مونتاج وصناعة محتوى للأطباء (ريلز إنستا وتيك توك).
 
-أقدر أسويلكم:
+أقدر أسويلك:
 ✅ ريلز بمونتاج احترافي وكابشن عربي
 ✅ لوكو العيادة وهويتها على كل فيديو
-✅ فيديوهات توعوية تجيب مراجعين جدد
+✅ فيديوهات توعوية بتخصصك تجيب مراجعين جدد
 
 هذا نموذج من شغلي لعيادة أسنان 👇
 {الفيديو}
 
-إذا يهمكم، أرسلكم الأسعار والتفاصيل 🙏`;
+إذا يهمك، أرسلك الأسعار والتفاصيل 🙏`;
 
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
-
 const $ = (id) => document.getElementById(id);
+const ar = (n) => n.toLocaleString("ar-EG");
 const me = $("me"), video = $("video"), tpl = $("tpl");
 me.value = store.get("me", "");
 video.value = store.get("video", "");
-tpl.value = store.get("tpl", DEFAULT_TPL);
-let sent = store.get("sent", {});
+tpl.value = store.get("tpl2", DEFAULT_TPL);
+let picked = new Set(store.get("picked", []));
+let sent = store.get("sentDocs", {});
 
-const ar = (n) => n.toLocaleString("ar-EG");
+const ready = () => !!(me.value.trim() && video.value.trim());
+function messageFor([title, name]) {
+  return tpl.value.replaceAll("{اللقب}", title).replaceAll("{الاسم}", name)
+    .replaceAll("{اسمي}", me.value.trim()).replaceAll("{الفيديو}", video.value.trim())
+    .replace(/ {2,}/g, " ");
+}
+const waLink = (d) => `https://wa.me/964${d[4].slice(1)}?text=${encodeURIComponent(messageFor(d))}`;
+const label = (d) => d[1] ? `د. ${d[1]}` : `طبيب ${d[2]}`;
 
-function render() {
-  const ready = me.value.trim() && video.value.trim();
-  $("missing").hidden = !!ready;
-  const list = $("list");
-  list.innerHTML = "";
-  clinics.forEach(([name, meta, phone, flag]) => {
-    const text = tpl.value
-      .replaceAll("{العيادة}", name)
-      .replaceAll("{اسمي}", me.value.trim())
-      .replaceAll("{الفيديو}", video.value.trim());
-    const li = document.createElement("li");
-    if (sent[phone]) li.className = "done";
-    li.innerHTML = `
-      <div class="name"></div>
-      <div class="meta"><span class="${flag ? "flag" : ""}"></span> · <span class="phone"></span></div>
-      <div class="actions">
-        <a class="send" target="_blank" rel="noopener">واتساب</a>
-        <label class="tick"><input type="checkbox"> أرسلت</label>
-      </div>`;
-    li.querySelector(".name").textContent = name;
-    li.querySelector(".meta span").textContent = meta;
-    li.querySelector(".phone").textContent = phone;
-    const a = li.querySelector(".send");
-    a.href = `https://wa.me/964${phone.slice(1)}?text=${encodeURIComponent(text)}`;
-    a.setAttribute("aria-disabled", ready ? "false" : "true");
-    a.setAttribute("aria-label", `فتح واتساب مع ${name}`);
-    const cb = li.querySelector("input");
-    cb.checked = !!sent[phone];
-    cb.addEventListener("change", () => {
-      if (cb.checked) sent[phone] = Date.now(); else delete sent[phone];
-      store.set("sent", sent); render();
+function renderList() {
+  const host = $("lists");
+  host.innerHTML = "";
+  groups.forEach(([area, docs]) => {
+    const h = document.createElement("h2");
+    const t = document.createElement("span"); t.textContent = `${area} · ${ar(docs.length)}`;
+    const b = document.createElement("button"); b.type = "button"; b.className = "linkbtn";
+    const allOn = docs.every((d) => picked.has(d[4]));
+    b.textContent = allOn ? "شيل الكل" : "حدد الكل";
+    b.addEventListener("click", () => { docs.forEach((d) => allOn ? picked.delete(d[4]) : picked.add(d[4])); save(); });
+    h.append(t, b); host.appendChild(h);
+    const ul = document.createElement("ul");
+    docs.forEach((d) => {
+      const li = document.createElement("li");
+      li.innerHTML = `<label><input type="checkbox"><span class="name"></span><span class="meta"></span></label>`;
+      const cb = li.querySelector("input");
+      cb.id = "d" + d[4]; cb.checked = picked.has(d[4]);
+      cb.addEventListener("change", () => { cb.checked ? picked.add(d[4]) : picked.delete(d[4]); save(); });
+      const nm = li.querySelector(".name"); nm.textContent = label(d);
+      if (sent[d[4]]) { const s = document.createElement("span"); s.className = "badge"; s.textContent = "مرسل"; nm.appendChild(s); }
+      const meta = li.querySelector(".meta");
+      meta.append(`${d[2]} · ${d[3]} · `);
+      const ph = document.createElement("span"); ph.className = "phone"; ph.textContent = d[4]; meta.appendChild(ph);
+      if (d[5]) { const f = document.createElement("span"); f.className = "flag"; f.textContent = ` · ${d[5]}`; meta.appendChild(f); }
+      ul.appendChild(li);
     });
-    list.appendChild(li);
+    host.appendChild(ul);
   });
-  const done = clinics.filter((c) => sent[c[2]]).length;
-  $("count").textContent = `أرسلت ${ar(done)} من ${ar(clinics.length)}`;
-  $("fill").style.width = `${(done / clinics.length) * 100}%`;
+  $("selCount").textContent = `${ar(picked.size)} محدد`;
+  $("start").disabled = !(picked.size && ready());
+  $("missing").hidden = ready();
 }
+function save() { store.set("picked", [...picked]); renderList(); }
 
-for (const [el, key] of [[me, "me"], [video, "video"], [tpl, "tpl"]]) {
-  el.addEventListener("input", () => { store.set(key, el.value); render(); });
+// send run
+let queue = [], pos = 0;
+function showRun() {
+  if (pos >= queue.length) { stopRun(); return; }
+  const d = queue[pos];
+  $("runStep").textContent = `${ar(pos + 1)} من ${ar(queue.length)}`;
+  $("runWho").textContent = label(d);
+  $("runMeta").textContent = `${d[2]} · ${d[3]} · ${d[4]}`;
+  $("runText").textContent = messageFor(d);
+  $("runOpen").href = waLink(d);
+  $("runNext").textContent = pos + 1 < queue.length ? "أرسلت، التالي" : "أرسلت، خلصت";
+  window.scrollTo(0, 0);
 }
-render();
+function stopRun() {
+  $("runView").hidden = true; document.querySelector(".wrap").hidden = false; $("bar").hidden = false; renderList();
+}
+$("start").addEventListener("click", () => {
+  queue = all.filter((d) => picked.has(d[4]));
+  if (!queue.length || !ready()) return;
+  pos = 0;
+  document.querySelector(".wrap").hidden = true; $("bar").hidden = true; $("runView").hidden = false;
+  showRun();
+});
+$("runNext").addEventListener("click", () => {
+  const d = queue[pos]; sent[d[4]] = Date.now(); picked.delete(d[4]);
+  store.set("sentDocs", sent); store.set("picked", [...picked]);
+  pos++; showRun();
+});
+$("runSkip").addEventListener("click", () => { pos++; showRun(); });
+$("runStop").addEventListener("click", stopRun);
+
+for (const [el, key] of [[me, "me"], [video, "video"], [tpl, "tpl2"]]) {
+  el.addEventListener("input", () => { store.set(key, el.value); renderList(); });
+}
+$("reset").addEventListener("click", () => { tpl.value = DEFAULT_TPL; store.set("tpl2", DEFAULT_TPL); renderList(); });
+renderList();
 </script>
