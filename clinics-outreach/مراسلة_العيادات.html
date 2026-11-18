@@ -1,0 +1,190 @@
+<title>مراسلة عيادات الكرخ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one narrow column — settings card on top, then a checklist of clinics, one tap each */
+:root {
+  --bg: #f3f6f5; --surface: #ffffff; --fg: #14201d; --muted: #5b6b67; --line: #dbe3e0;
+  --accent: #0f7a5c; --accent-fg: #ffffff; --accent-soft: #e2f2ec; --warn: #9a5b00; --warn-soft: #fdf1dc;
+  --font: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1614; --surface: #17211e; --fg: #e6eeeb; --muted: #93a39f; --line: #2a3733;
+  --accent: #3fbf93; --accent-fg: #06140f; --accent-soft: #173a2e; --warn: #f0b860; --warn-soft: #3a2b12; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1614; --surface: #17211e; --fg: #e6eeeb; --muted: #93a39f; --line: #2a3733;
+  --accent: #3fbf93; --accent-fg: #06140f; --accent-soft: #173a2e; --warn: #f0b860; --warn-soft: #3a2b12; color-scheme: dark }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.6; }
+.wrap { max-width: 640px; margin: 0 auto; padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 16px; }
+h1 { font-size: 1.5rem; margin: 0; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+label { font-weight: 600; font-size: .9rem; display: block; margin-bottom: 4px; }
+input[type=text], input[type=url], textarea { width: 100%; box-sizing: border-box; font: inherit; color: var(--fg);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+textarea { min-height: 220px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hint { font-size: .82rem; color: var(--muted); margin: 0; }
+.note { background: var(--warn-soft); color: var(--warn); border-radius: 10px; padding: 10px 12px; font-size: .88rem; margin: 0; }
+.progress { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bar { flex: 1 1 160px; height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.count { font-weight: 600; font-variant-numeric: tabular-nums; }
+ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: center; }
+li.done { opacity: .6; }
+li.done .name { text-decoration: line-through; }
+.name { font-weight: 600; min-width: 0; }
+.meta { font-size: .82rem; color: var(--muted); grid-column: 1; min-width: 0; }
+.phone { direction: ltr; unicode-bidi: isolate; user-select: all; }
+.flag { color: var(--warn); }
+.actions { grid-row: 1 / span 2; grid-column: 2; display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
+.send { background: var(--accent); color: var(--accent-fg); text-decoration: none; text-align: center;
+  font-weight: 600; border-radius: 10px; padding: 8px 14px; white-space: nowrap; }
+.send[aria-disabled=true] { background: var(--line); color: var(--muted); pointer-events: none; }
+.tick { display: flex; gap: 6px; align-items: center; font-size: .82rem; color: var(--muted); cursor: pointer; justify-content: center; }
+.tick input { width: 18px; height: 18px; accent-color: var(--accent); }
+.excluded { font-size: .85rem; color: var(--muted); margin: 0; }
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <h1>مراسلة عيادات الكرخ</h1>
+    <p class="lede">اكتب اسمك ورابط الفيديو مرة وحدة. بعدين لكل عيادة دوس «واتساب»، تنفتح المحادثة والرسالة جاهزة باسم العيادة، وإنت بس دوس إرسال.</p>
+  </header>
+
+  <section class="panel" aria-label="بيانات الرسالة">
+    <div>
+      <label for="me">اسمك</label>
+      <input type="text" id="me" placeholder="مثلاً: مصطفى">
+    </div>
+    <div>
+      <label for="video">رابط فيديو د. حميد الفهداوي</label>
+      <input type="url" id="video" placeholder="https://www.instagram.com/reel/…" dir="ltr">
+    </div>
+    <div>
+      <label for="tpl">نص الرسالة</label>
+      <textarea id="tpl"></textarea>
+      <p class="hint">{العيادة} و{اسمي} و{الفيديو} تتبدل تلقائياً لكل عيادة.</p>
+    </div>
+    <p class="note" id="missing">اكتب اسمك ورابط الفيديو حتى تشتغل أزرار الواتساب.</p>
+  </section>
+
+  <div class="progress" aria-live="polite">
+    <span class="count" id="count"></span>
+    <div class="bar"><i id="fill"></i></div>
+  </div>
+  <p class="note">أرسل ١٠ رسائل باليوم تقريباً، مو الكل مرة وحدة، حتى ما ينحظر رقمك بالواتساب.</p>
+
+  <ul id="list"></ul>
+
+  <p class="excluded">ما مضافة حسب طلبك: كلير للأسنان، عيادات الغزالية لطب الأسنان، وعيادة د. عدنان مهند (هم بالغزالية هم).<br>
+  وما مضافة لأن ما إلها رقم: ميرال، ديبونت، د. الراوي، د. التهامي. هذني راسلهم من صفحاتهم.</p>
+</div>
+
+<script>
+const clinics = [
+  ["عيادة الأميرات لطب وتجميل الأسنان","أسنان · المنصور","07800083467"],
+  ["عيادة عشتار لطب الأسنان","أسنان · المنصور","07732902288"],
+  ["عيادة الاختصاصيين لطب الأسنان","أسنان · المنصور","07775800068"],
+  ["مركز المتحدة لطب الأسنان","أسنان · المنصور","07800411114"],
+  ["عيادات البيت الأبيض لطب الأسنان","أسنان · الداوودي","07726727380"],
+  ["عيادة د. محمد علي منصور","أسنان · المنطقة غير مؤكدة","07729000038", true],
+  ["عيادات الحارثية لطب الأسنان","أسنان · الحارثية","07823333525"],
+  ["العيادة المثالية لطب الفم والأسنان","أسنان · الحارثية","07826055833"],
+  ["مركز ألاين لطب وزراعة الأسنان","أسنان · اليرموك","07772001002"],
+  ["عيادة ميريام لطب الأسنان","أسنان · اليرموك","07718444222"],
+  ["مركز قبرص لطب الأسنان","أسنان · اليرموك · رقم قديم","07800190787", true],
+  ["عيادة 24 ساعة لطب الأسنان","أسنان · العامرية","07822744773"],
+  ["عيادات القيثارة التخصصية","أسنان وتجميل · العامرية","07816336663"],
+  ["عيادة لوركا لطب الأسنان","أسنان · الكرخ · رقم قديم","07704536572", true],
+  ["عيادة الوسيم لطب الأسنان","أسنان · يمكن مو بالكرخ","07715163033", true],
+  ["عيادة د. هدى علي حميد","تجميل · المنصور","07728649981"],
+  ["مركز ويف للتجميل","تجميل · المنصور","07744455055"],
+  ["مركز البارودي للليزر","تجميل وليزر · اليرموك","07854281562"],
+  ["عيادات الكبيسي للتجميل","تجميل وليزر · اليرموك","07735455191"],
+  ["عيادة د. رواء الجنابي","جلدية وليزر · الحارثية","07709833414"],
+  ["عيادة د. رحيق أحمد","جلدية وليزر · الحارثية","07744440100"],
+  ["عيادة د. أحمد الشمري","تجميل وليزر · الحارثية","07713599047"],
+  ["مركز فينوس للتجميل","ليزر وبشرة · الحارثية","07730753030"],
+  ["عيادة د. ربيعة حامد","نسائية · الحارثية","07719449379"],
+  ["عيادة د. فرح ناعم جاسم","نسائية · الحارثية · منشور قديم","07722778686", true],
+  ["عيادة د. منتهى الجنابي","نسائية · الحارثية","07723608200"],
+];
+
+const DEFAULT_TPL = `السلام عليكم، أهلاً بكادر {العيادة} 🌷
+آني {اسمي}، أشتغل مونتاج وصناعة محتوى للعيادات (ريلز إنستا وتيك توك).
+
+أقدر أسويلكم:
+✅ ريلز بمونتاج احترافي وكابشن عربي
+✅ لوكو العيادة وهويتها على كل فيديو
+✅ فيديوهات توعوية تجيب مراجعين جدد
+
+هذا نموذج من شغلي لعيادة أسنان 👇
+{الفيديو}
+
+إذا يهمكم، أرسلكم الأسعار والتفاصيل 🙏`;
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+
+const $ = (id) => document.getElementById(id);
+const me = $("me"), video = $("video"), tpl = $("tpl");
+me.value = store.get("me", "");
+video.value = store.get("video", "");
+tpl.value = store.get("tpl", DEFAULT_TPL);
+let sent = store.get("sent", {});
+
+const ar = (n) => n.toLocaleString("ar-EG");
+
+function render() {
+  const ready = me.value.trim() && video.value.trim();
+  $("missing").hidden = !!ready;
+  const list = $("list");
+  list.innerHTML = "";
+  clinics.forEach(([name, meta, phone, flag]) => {
+    const text = tpl.value
+      .replaceAll("{العيادة}", name)
+      .replaceAll("{اسمي}", me.value.trim())
+      .replaceAll("{الفيديو}", video.value.trim());
+    const li = document.createElement("li");
+    if (sent[phone]) li.className = "done";
+    li.innerHTML = `
+      <div class="name"></div>
+      <div class="meta"><span class="${flag ? "flag" : ""}"></span> · <span class="phone"></span></div>
+      <div class="actions">
+        <a class="send" target="_blank" rel="noopener">واتساب</a>
+        <label class="tick"><input type="checkbox"> أرسلت</label>
+      </div>`;
+    li.querySelector(".name").textContent = name;
+    li.querySelector(".meta span").textContent = meta;
+    li.querySelector(".phone").textContent = phone;
+    const a = li.querySelector(".send");
+    a.href = `https://wa.me/964${phone.slice(1)}?text=${encodeURIComponent(text)}`;
+    a.setAttribute("aria-disabled", ready ? "false" : "true");
+    a.setAttribute("aria-label", `فتح واتساب مع ${name}`);
+    const cb = li.querySelector("input");
+    cb.checked = !!sent[phone];
+    cb.addEventListener("change", () => {
+      if (cb.checked) sent[phone] = Date.now(); else delete sent[phone];
+      store.set("sent", sent); render();
+    });
+    list.appendChild(li);
+  });
+  const done = clinics.filter((c) => sent[c[2]]).length;
+  $("count").textContent = `أرسلت ${ar(done)} من ${ar(clinics.length)}`;
+  $("fill").style.width = `${(done / clinics.length) * 100}%`;
+}
+
+for (const [el, key] of [[me, "me"], [video, "video"], [tpl, "tpl"]]) {
+  el.addEventListener("input", () => { store.set(key, el.value); render(); });
+}
+render();
+</script>
