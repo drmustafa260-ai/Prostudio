@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Prostudio</title>
+  <meta name="description" content="Prostudio — استوديو تصوير وتصميم">
+  <meta name="theme-color" content="#0f0f12">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a href="#" class="brand">Prostudio</a>
+      <nav class="nav">
+        <a href="#work">الأعمال</a>
+        <a href="#contact">تواصل</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- البروفايل -->
+    <section class="profile">
+      <div class="avatar" aria-hidden="true"><span>P</span></div>
+      <div class="profile-info">
+        <h1>Prostudio</h1>
+        <ul class="stats">
+          <li><b>+250</b><span>مشروع</span></li>
+          <li><b>+120</b><span>زبون</span></li>
+          <li><b>6</b><span>سنوات</span></li>
+        </ul>
+        <p class="bio">استوديو تصوير وتصميم ومونتاج 🎬📸<br>نحوّل فكرتك لمحتوى يلفت النظر</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#contact">احجز هسه</a>
+          <a class="btn" href="#work">شوف أعمالنا</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- الهايلايتات -->
+    <section class="highlights" aria-label="الهايلايتات">
+      <ul class="highlights-row" id="highlights"></ul>
+    </section>
+
+    <!-- الأعمال -->
+    <section id="work" class="work">
+      <div class="tabs"><span class="tab active">▦ المنشورات</span></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <!-- التواصل -->
+    <section id="contact" class="contact">
+      <h2>تواصل ويانه</h2>
+      <p>دزلنا رسالة ونرجعلك بأسرع وقت.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#" data-link="whatsapp">واتساب</a>
+        <a class="btn" href="#" data-link="instagram">انستغرام</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer wrap">© <span id="year"></span> Prostudio</footer>
+
+  <!-- عارض الستوري -->
+  <div class="story" id="story" role="dialog" aria-modal="true" aria-label="ستوري" hidden>
+    <div class="story-frame" id="storyFrame">
+      <div class="story-bars" id="storyBars"></div>
+      <div class="story-head">
+        <div class="story-who">
+          <div class="story-thumb" id="storyThumb"></div>
+          <span id="storyTitle"></span>
+        </div>
+        <button class="story-close" id="storyClose" aria-label="إغلاق">✕</button>
+      </div>
+      <div class="story-media" id="storyMedia"></div>
+    </div>
+  </div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/highlights.js"></script>
+</body>
+</html>
